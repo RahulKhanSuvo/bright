@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.database import Base, engine
-from app.routers import users
+from app.routers import auth, users
 
 # Automatically create database tables if they don't exist
 
@@ -14,6 +14,7 @@ app = FastAPI(
 
 # Register endpoint modules
 app.include_router(users.router)
+app.include_router(auth.router)
 
 
 @app.get("/")
