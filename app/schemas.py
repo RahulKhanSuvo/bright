@@ -7,6 +7,11 @@ class PostBase(BaseModel):
     content: str
 
 
+class LoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+
 class PostCreate(PostBase):
     pass
 
