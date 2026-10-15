@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 # --- Post Schemas ---
@@ -23,11 +23,11 @@ class PostResponse(PostBase):
 
 class UserBase(BaseModel):
     name: str
-    email: str
+    email: EmailStr
 
 
 class UserCreate(UserBase):
-    pass
+    password: str = Field(min_length=8)
 
 
 class UserResponse(UserBase):
