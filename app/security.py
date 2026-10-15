@@ -3,11 +3,9 @@ from datetime import UTC, datetime, timedelta
 import jwt
 from pwdlib import PasswordHash
 
-pwd_context = PasswordHash.recommended()
+from app.config import settings
 
-SECRET_KEY = "your-super-secret-key-change-this-in-production"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+pwd_context = PasswordHash.recommended()
 
 
 def hash_password(password: str) -> str:
@@ -20,6 +18,6 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.now(UTC) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(UTC) + timedelta(minutes=settings.access_token_expire_minutes)
     to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, settings.secret_key, algorithm=settings.algorithm)
