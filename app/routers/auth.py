@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from app.database import get_db
+from app.dependencies import CurrentUser
 from app.models import User
 from app.schemas import LoginRequest, UserCreate, UserResponse
 from app.security import create_access_token, hash_password, verify_password
@@ -60,6 +61,12 @@ def login(form_data: LoginRequest, response: Response, db: DbSession):
         max_age=1800,  # Cookie expires in 30 minutes
     )
     return {"message": "Login successful"}
+
+
+@router.get("/me", response_model=UserResponse)
+def get_logged_in_user(current_user: CurrentUser):
+    # If the request doesn't have a valid cookie, get_current_user blocks it automatically 401
+    return current_user
 
 
 @router.post("/logout")
