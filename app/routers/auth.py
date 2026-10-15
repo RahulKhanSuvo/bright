@@ -57,3 +57,15 @@ def login(form_data: LoginRequest, response: Response, db: DbSession):
         max_age=1800,  # Cookie expires in 30 minutes
     )
     return {"message": "Login successful"}
+
+
+@router.post("/logout")
+def logout(response: Response):
+    # Instructs the browser to delete the cookie immediately
+    response.delete_cookie(
+        key="access_token",
+        httponly=True,
+        secure=False,  # Match whatever settings you used in login
+        samesite="lax",
+    )
+    return {"message": "Logged out successfully"}
