@@ -6,5 +6,6 @@ dist/
 wheels/
 *.egg-info
 .env
+sql_app.db
 # Virtual environments
 .venv
