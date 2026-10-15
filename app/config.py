@@ -9,7 +9,7 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    secret_key: str = Field(validation_alias="SECRET_KEY")
+    secret_key: str = Field(default="", validation_alias="SECRET_KEY")
     algorithm: str = Field(
         default="HS256",
         validation_alias="ALGORITHM",
@@ -18,7 +18,7 @@ class Settings(BaseSettings):
         default=30,
         validation_alias="ACCESS_TOKEN_EXPIRE_MINUTES",
     )
-    database_url: str = Field(validation_alias="DATABASE_URL")
+    database_url: str = Field(default="", validation_alias="DATABASE_URL")
 
 
 settings = Settings()  # pyright: ignore[reportCallIssue]
