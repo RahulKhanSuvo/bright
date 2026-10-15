@@ -40,6 +40,6 @@ class UserCreate(UserBase):
 class UserResponse(UserBase):
     id: UUID
     # Including posts in the user response automatically serializes the relationship!
-    posts: list[PostResponse] = []
+    # posts: list[PostResponse] = []
 
     model_config = ConfigDict(from_attributes=True)
