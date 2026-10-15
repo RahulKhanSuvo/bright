@@ -14,7 +14,7 @@ class User(Base):
     )
     name: Mapped[str] = mapped_column(String(50))
     email: Mapped[str] = mapped_column(String(100), unique=True, index=True)
-
+    hashed_password: Mapped[str] = mapped_column(String(255))
     # Updated to lowercase 'list'
     posts: Mapped[list["Post"]] = relationship(
         back_populates="author", cascade="all, delete-orphan"
