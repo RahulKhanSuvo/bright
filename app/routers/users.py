@@ -20,12 +20,8 @@ def create_user(
     user: schemas.UserCreate,
     db: DbSession,
 ):
-    db_user = (
-        models.User(
-            name=user.name,
-            email=user.email,
-            hashed_password=hash_password(user.password),
-        ),
+    db_user = models.User(
+        name=user.name, email=user.email, hashed_password=hash_password(user.password)
     )
     db.add(db_user)
     db.commit()
