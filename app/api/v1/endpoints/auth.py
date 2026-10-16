@@ -1,13 +1,14 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, HTTPException, Query, Response, status
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
 from app.models.user import User
 from app.schemas.v1 import LoginRequest, UserCreate, UserResponse
+from app.schemas.v1.user import PaginatedUserResponse
 from app.services import CurrentUser
 from app.services.security_service import (
     create_access_token,
@@ -15,9 +16,8 @@ from app.services.security_service import (
     verify_password,
 )
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(tags=["auth"])
 DbSession = Annotated[Session, Depends(get_db)]
-FormData = Annotated[OAuth2PasswordRequestForm, Depends()]
 
 
 # 1. SIGNUP / REGISTER
@@ -84,3 +84,20 @@ def logout(response: Response):
         samesite="lax",
     )
     return {"message": "Logged out successfully"}
+
+
+@router.get("/users", response_model=PaginatedUserResponse)
+def all_users(
+    db: DbSession,
+    skip: int = Query(0, ge=0, description="Number of records to skip"),
+    limit: int = Query(10, ge=1, le=100, description="Max number of records to return"),
+):
+    total = db.scalar(select(func.count()).select_from(User)) or 0
+    stmt = select(User).offset(skip).limit(limit)
+    users = db.scalars(stmt).all()
+    return {
+        "total": total,
+        "skip": skip,
+        "limit": limit,
+        "items": users,
+    }
